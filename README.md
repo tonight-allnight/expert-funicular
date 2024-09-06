@@ -7,5 +7,5 @@ private void stopwhenspinning()
         spintimer = spinduration;
     wasstopped = true;
 }//将wasstopped判定提前。在wasstoppped为真情况下进入，不对计时器重新赋值。
-2.在投射模式 ，未进入状态时按下左键会出现辅助瞄准射线，同时辅助瞄准射线会从之前的位置开始
+2.在投射模式 ，未进入状态时按下左键会出现辅助瞄准射线，同时辅助瞄准射线会从之前的位置开始（解决）
 3.残影攻击状态，在里敌人较远时仍会朝向敌人的方向。
