@@ -33,10 +33,7 @@ public class enemy_skelton : enemy
     protected override void Update()
     {
         base.Update();
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            statemachine.changestate(stunnedstate);
-        }
+        
     }
     public override bool Canbestunned()
     {

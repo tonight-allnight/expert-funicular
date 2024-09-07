@@ -10,10 +10,11 @@ public class clone_skill : skill
     [Space]
     [SerializeField] private bool canattack;
     [SerializeField] private bool canchangedir;
-    public void createclone(Transform _cloneposition , float _facingdir)
+    private Transform clclc;
+    public void createclone(Transform _cloneposition , float _facingdir , Vector3 _offset)
     {
         GameObject newclone = Instantiate(cloneprefab);
-        newclone.GetComponent<clone_skill_controller>().setupclone(_cloneposition , cloneduration ,_facingdir , canattack ,  canchangedir );
-        Debug.Log(_cloneposition);
+        newclone.GetComponent<clone_skill_controller>().setupclone(_cloneposition , cloneduration ,_facingdir , canattack ,  canchangedir , _offset , findclosestenemy(newclone.transform));
+        //Debug.Log("冲刺时判定最近" +findclosestenemy(newclone.transform));
     }
 }

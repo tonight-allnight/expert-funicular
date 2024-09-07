@@ -17,12 +17,14 @@ public class player : entity
     [Header("move info")]
     public float movespeed;
     public float jumpforce;
+    public float swordreturnimpact;
 
     [Header("dash info")]
     public float dashspeed;
     public float dashduration;
     public float dashdir { get;private set; }
     public skillmanager skill {  get; private set; }
+    public GameObject sword { get; private set; }
 
     #region ״̬
     public playerstatemachine statemachine { get; private set; }
@@ -40,6 +42,11 @@ public class player : entity
     public playerprimaryattackstate playerprimaryattackstate { get; private set; }
     public counterattackstate counterattack { get; private set; }
 
+    public playeraimswordstate playeraims {  get; private set; }
+    public playercatchswordstate Playercatchsword { get; private set; }
+
+    public playerblackholestate playerblackhole { get; private set; }
+
     #endregion
     protected override void Awake()
     {
@@ -55,6 +62,9 @@ public class player : entity
         playerwalljumpstate = new playerwalljumpstate(statemachine, this, "jump");
         playerprimaryattackstate = new playerprimaryattackstate(statemachine, this, "attack");
         counterattack = new counterattackstate(statemachine, this, "defendattack");
+        playeraims = new playeraimswordstate(statemachine, this, "aimsword");
+        Playercatchsword = new playercatchswordstate(statemachine, this, "catchsword");
+        playerblackhole = new playerblackholestate(statemachine, this, "jump");
     }
     protected override void Start()
     {
@@ -69,7 +79,23 @@ public class player : entity
         statemachine.currentstate.update();  
 
         checkfordashinput();
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            skill.crystal.canuseskill();
+        }
     }
+    public void assignnewsword(GameObject _newsword)
+    {
+        sword = _newsword;
+    }
+    public void clearthesword()
+    {
+        statemachine.changestate(Playercatchsword);
+        Destroy(sword);
+    }
+
+ 
 
     private void checkfordashinput()
     {
@@ -80,7 +106,7 @@ public class player : entity
         }
 
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && skillmanager.instance.dash.canuseskill())
+        if (Input.GetKeyDown(KeyCode.LeftShift) && skillmanager.instance.dash.canuseskill() && !playerblackhole.isblackhole)
         {
 
             dashdir = Input.GetAxisRaw("Horizontal");

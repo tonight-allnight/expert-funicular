@@ -22,6 +22,16 @@ public class playergroundstate : playerstate
     {
         base.update();
 
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            statemachine.changestate(player.playerblackhole);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q) && hasnosword())
+        {
+            statemachine.changestate(player.playeraims);
+        }
+
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             statemachine.changestate(player.counterattack);
@@ -41,6 +51,15 @@ public class playergroundstate : playerstate
             statemachine.changestate(player.playerjumpstate);
         }
 
+    }
+    private bool hasnosword()//检查有无多的jian
+    {
+        if (!player.sword)
+        {
+            return true;
+        }
+        player.sword.GetComponent<sword_skill_controller>().returnsword();
+        return false;
     }
 
 }

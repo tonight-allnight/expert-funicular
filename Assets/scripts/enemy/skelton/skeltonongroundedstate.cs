@@ -10,12 +10,13 @@ public class skeltonongroundedstate : enemystate
     public skeltonongroundedstate(enemystatemachine _statemachine, enemy _enemybase, string _animboolname, enemy_skelton _enemy) : base(_statemachine, _enemybase, _animboolname)
     {
         this.enemy = _enemy;
-        player = playermanager.instance.player.transform;
+
     }
 
     public override void enter()
     {
         base.enter();
+        player = playermanager.instance.player.transform;
     }
 
     public override void exit()

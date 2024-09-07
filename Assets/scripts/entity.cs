@@ -21,6 +21,8 @@ public class entity : MonoBehaviour
     public Animator animator { get; private set; }
     public Rigidbody2D rb { get; private set; }
     public entityfx fx { get; private set; }
+
+    public SpriteRenderer sr { get; private set; }
     #endregion
     public int facingdir { get; private set; } = 1;
     protected bool isright = true;
@@ -32,9 +34,10 @@ public class entity : MonoBehaviour
     }
     protected virtual void Start()
     {
+        sr = GetComponentInChildren<SpriteRenderer>();  
         animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        fx = GetComponentInChildren<entityfx>();
+        fx = GetComponent<entityfx>();
     }
     protected virtual void Update()
     {
@@ -44,7 +47,7 @@ public class entity : MonoBehaviour
     {
         fx.StartCoroutine("flashfx");
         StartCoroutine("hitknockback");
-        Debug.Log(gameObject.name);
+        //Debug.Log(gameObject.name);
     }
     protected virtual IEnumerator hitknockback()
     {
@@ -106,4 +109,16 @@ public class entity : MonoBehaviour
         }
     }
     #endregion
+
+    public void maketransparent(bool _transparent)
+    {
+        if (_transparent)
+        {
+            sr.color = Color.clear;
+        }
+        else
+        {
+            sr.color = Color.white;
+        }
+    }
 }

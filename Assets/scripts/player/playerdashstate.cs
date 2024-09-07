@@ -13,7 +13,7 @@ public class playerdashstate : playerstate
     {
         base.enter();
         //Debug.Log(player.transform);
-        player.skill.clone.createclone(player.transform , player.facingdir);
+        player.skill.clone.createclone(player.transform , player.facingdir , Vector2.zero);
         statetimer = player.dashduration;
     }
 

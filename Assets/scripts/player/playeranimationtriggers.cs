@@ -23,4 +23,8 @@ public class playeranimationtriggers : MonoBehaviour
             }
         }
     }
+    private void swordthrowtrigger()
+    {
+        skillmanager.instance.sword.createsword();
+    }
 }
