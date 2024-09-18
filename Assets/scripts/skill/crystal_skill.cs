@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class crystal_skill : skill
 {
+    [Header("crystal mirage")]
+    [SerializeField] private bool cloneinsteadofcrystal;
+
     [SerializeField] private float crystalduration;
     [Header("explode cystal")]
     [SerializeField] private bool canexplode;
@@ -16,6 +19,17 @@ public class crystal_skill : skill
     [SerializeField] private GameObject crystalprefab;
     private GameObject currentcrystal;
 
+
+
+
+    [Header("multi stacking crystal")]
+    [SerializeField] private bool canusemultistacks;
+    [SerializeField] private int amountostacks;
+    [SerializeField] private float multicooldown;
+    [SerializeField] private float usetimewindow;
+    [SerializeField] public List<GameObject> crystalleft = new List<GameObject>();
+
+
     public override bool canuseskill()
     {
         return base.canuseskill();
@@ -24,12 +38,14 @@ public class crystal_skill : skill
     public override void Useskill()
     {
         base.Useskill();
+        if (canusemulti())
+        {
+            return;
+        }
         if(currentcrystal == null)//没有则创建
         {
-            currentcrystal = Instantiate(crystalprefab , player.transform.position, Quaternion.identity);
-            crystal_skill_controller crystalscript = currentcrystal.GetComponent<crystal_skill_controller>();
-            crystalscript.setupcrystal(crystalduration , canexplode ,canmove , movespeed , findclosestenemy(currentcrystal.transform));
-            Debug.Log(findclosestenemy(currentcrystal.transform));
+            createclonecrystal();
+            //Debug.Log(findclosestenemy(currentcrystal.transform));
         }
         else//有则进行状态判断
         {
@@ -40,11 +56,74 @@ public class crystal_skill : skill
 
             Vector2 playerpos = player.transform.position; 
             player.transform.position = currentcrystal.transform.position;
-
             currentcrystal.transform.position = playerpos;
-            currentcrystal.GetComponent<crystal_skill_controller>().fininshexplode();
+
+            if (cloneinsteadofcrystal)
+            {
+                skillmanager.instance.clone.createclone(currentcrystal.transform,player.facingdir,Vector3.zero);
+                Destroy(currentcrystal);
+            }
+            else
+            {
+                currentcrystal.GetComponent<crystal_skill_controller>().fininshexplode();
+
+            }
+
         }
     }
 
-    
+    public void createclonecrystal()
+    {
+        currentcrystal = Instantiate(crystalprefab, player.transform.position, Quaternion.identity);
+        crystal_skill_controller crystalscript = currentcrystal.GetComponent<crystal_skill_controller>();
+        crystalscript.setupcrystal(crystalduration, canexplode, canmove, movespeed, findclosestenemy(currentcrystal.transform),player);
+        crystalscript.chooserandomenemy();
+    }
+
+    public void currentcrystalchooserandomtarget() => currentcrystal.GetComponent<crystal_skill_controller>().chooserandomenemy();
+
+    private bool canusemulti()
+    {
+        if (canusemultistacks)
+        {
+            if (crystalleft.Count > 0)
+            {
+                if(crystalleft.Count == amountostacks)
+                {
+                    Invoke("resetability" , usetimewindow);
+                }
+
+                cooldown = 0;
+                GameObject crystaltospan = crystalleft[crystalleft.Count - 1];
+                GameObject newcrystal = Instantiate(crystaltospan, player.transform.position, Quaternion.identity);
+                crystalleft.Remove(crystaltospan);
+                newcrystal.GetComponent<crystal_skill_controller>().
+                    setupcrystal(crystalduration, canexplode, canmove, movespeed, findclosestenemy(newcrystal.transform), player);
+                if(crystalleft.Count <= 0)
+                {
+                    cooldown = multicooldown;
+                    refillcrystal();
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+    private void refillcrystal()
+    {
+        int amountofadd = amountostacks - crystalleft.Count;
+        for (int i = 0; i < amountofadd; i++)
+        {
+            crystalleft.Add(crystalprefab);
+        }
+    }
+    private void resetability()
+    {
+        if(cooldowntimer > 0)
+        {
+            return;
+        }
+        cooldowntimer = multicooldown;
+        refillcrystal() ;
+    }
 }

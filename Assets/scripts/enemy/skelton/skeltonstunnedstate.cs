@@ -21,7 +21,7 @@ public class skeltonstunnedstate : enemystate
     public override void exit()
     {
         base.exit();
-        enemy.fx.Invoke("cannelcolorblink",0);
+        enemy.fx.Invoke("cannelcolorchange", 0);
     }
 
     public override void update()

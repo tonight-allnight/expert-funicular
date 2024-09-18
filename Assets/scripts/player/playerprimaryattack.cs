@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class playerprimaryattackstate : playerstate
 {
-    private int combocounter;
+    public int combocounter { get; private set; }
     private float lasttimeattacked;
     private float combowindow = 0.4f;
     public playerprimaryattackstate(playerstatemachine _statemachine, player _player, string _animboolname) : base(_statemachine, _player, _animboolname)

@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class clone_skill_controller : skill
 {
+    private player player;
     private SpriteRenderer sr;
     private Animator anim;
     [SerializeField] private float colorlosingspeed;
@@ -12,6 +14,9 @@ public class clone_skill_controller : skill
     [SerializeField] private float checkdistance;
     private float clonetimer;
     private Transform closetenemy;
+    private bool canduplicatetclone;
+    private float facingdir = 1;
+    private float chancetoduplicate;
 
     private void Awake()
     {
@@ -30,22 +35,24 @@ public class clone_skill_controller : skill
             }
         }
     }
-    public void setupclone(Transform _newtransform , float _cloneduration ,float _facingdir ,bool _canattack ,bool _canchangedir , Vector3 _offset ,Transform _clostenemy = null)
+    public void setupclone(Transform _newtransform , float _cloneduration ,float _facingdir ,bool _canattack ,bool _canchangedir , Vector3 _offset ,Transform _clostenemy ,bool _cancreateclone , float _chancetoduplicate , player _player)
     {
         
         transform.position = _newtransform.position + _offset;
         Transform xx = _newtransform;
         clonetimer = _cloneduration;
         closetenemy = _clostenemy;
+        canduplicatetclone = _cancreateclone;
+        chancetoduplicate = _chancetoduplicate;
+        player = _player;
         //Debug.Log( "传输入最近敌人"+ _clostenemy);
-        bool _can = _canchangedir;
         //Debug.Log(_can);
         if (_canattack)//残影攻击技能
             anim.SetInteger("attacknumber", Random.Range(1, 3));
-        if (_can && findclosestenemy(xx) != null)//残影朝向敌人能力，攻击技能分支，未解决敌人过远方向未改变的问题
+        if (_canchangedir && findclosestenemy(xx) != null)//残影朝向敌人能力，攻击技能分支，未解决敌人过远方向未改变的问题
         {
-            faceclosestenemy(_can);
-
+            faceclosestenemy(xx);
+            //Debug.Log(findclosestenemy(xx));
         }
         else//未开启时朝向移动方向 未开启技能时状态
             changeface(_facingdir);
@@ -63,23 +70,30 @@ public class clone_skill_controller : skill
         {
             if (hit.GetComponent<enemy>() != null)
             {
-                hit.GetComponent<enemy>().damage();
+                player.states.DoDamage(hit.GetComponent<characterstates>());
+
+                if (canduplicatetclone)
+                {
+                    if(Random.Range(0,100) < chancetoduplicate)
+                    {
+                        skillmanager.instance.clone.createclone(hit.transform, player.facingdir, new Vector3(.5f * facingdir,0,0));
+                    }
+                }
             }
         }
     }
-    private void faceclosestenemy( bool can)//朝向最近的敌人
+    private void faceclosestenemy( Transform _closetenemy)//朝向最近的敌人
     {
        
-        if(closetenemy != null)
+        if(findclosestenemy(_closetenemy) != null)
         {
-            if(transform.position.x > closetenemy.position.x)
+            //Debug.Log("传输入最近敌人" + closetenemy);
+            //Debug.Log(transform.position.x-findclosestenemy(_closetenemy).position.x);
+            if (transform.position.x > findclosestenemy(_closetenemy).position.x)
             {
+                facingdir = -1;
                 transform.Rotate(0, 180, 0);
             }
-        }
-        else
-        {
-            can = false;
         }
 
         

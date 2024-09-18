@@ -19,9 +19,25 @@ public class playeranimationtriggers : MonoBehaviour
         {
             if(hit.GetComponent<enemy>() != null)
             {
-                hit.GetComponent<enemy>().damage();
+                enemystats _target = hit.GetComponent<enemystats>();
+                if(_target != null)
+                    player.states.DoDamage(_target);
+
+                itemdata_equipment weapondata = storehouse.instance.getequipment(Equipmentype.weapon);
+                if (weapondata.itemtype != Itemtype.material)
+                {
+                    weapondata.excuteitemeffect(_target.transform);
+                }
+                else
+                {
+                    return;
+                }
             }
         }
+    }
+    private void weaponeffect()
+    {
+        
     }
     private void swordthrowtrigger()
     {

@@ -13,13 +13,14 @@ public class playerdashstate : playerstate
     {
         base.enter();
         //Debug.Log(player.transform);
-        player.skill.clone.createclone(player.transform , player.facingdir , Vector2.zero);
+        player.skill.clone.Createcloneondashstart();
         statetimer = player.dashduration;
     }
 
     public override void exit()
     {
         base.exit();
+        player.skill.clone.Createclonondashover();
         player.setvelocity(0, rb.velocity.y);
     }
 

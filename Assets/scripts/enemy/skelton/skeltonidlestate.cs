@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class skeltonidlestate : skeltonongroundedstate
 {
+    private enemy_skelton enemy;
     public skeltonidlestate(enemystatemachine _statemachine, enemy _enemybase, string _animboolname, enemy_skelton _enemy) : base(_statemachine, _enemybase, _animboolname, _enemy)
     {
+        this.enemy = _enemy;
     }
 
     public override void enter()
@@ -22,7 +24,7 @@ public class skeltonidlestate : skeltonongroundedstate
     public override void update()
     {
         base.update();
-        if(statetimer < 0 )
+        if (statetimer < 0 )
         {
             statemachine.changestate(enemy.movestate);
         }

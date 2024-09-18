@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ed0fb78d298c9d40b3d2f65df2889a6, type: 3}
+  m_Name: myjacket
+  m_EditorClassIdentifier: 
+  itemtype: 1
+  itemname: "\u661F\u7239\u7684\u5939\u514B"
+  icon: {fileID: 957708663, guid: a9ca9a41598dd2e44b125928045c518f, type: 3}
+  dropchance: 0
+  equipmentype: 1
+  itemcooldown: 0
+  itemeffects:
+  - {fileID: 11400000, guid: b909770d2b0bc84439183672174bacfd, type: 2}
+  strength: 0
+  agility: 5
+  intelligence: 0
+  vitality: 0
+  damage: 0
+  critchance: 0
+  critpower: 0
+  maxHp: 50
+  armor: 0
+  evasion: 5
+  magicresistance: 0
+  firedamage: 0
+  icedamage: 0
+  lightingdamage: 0
+  craftingmaterials: []

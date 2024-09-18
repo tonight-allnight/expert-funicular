@@ -18,11 +18,14 @@ public class player : entity
     public float movespeed;
     public float jumpforce;
     public float swordreturnimpact;
+    private float defaultmovespeed;
+    private float defaultjumpforce;
 
     [Header("dash info")]
     public float dashspeed;
     public float dashduration;
     public float dashdir { get;private set; }
+    private float defaultdashspeed;
     public skillmanager skill {  get; private set; }
     public GameObject sword { get; private set; }
 
@@ -47,6 +50,7 @@ public class player : entity
 
     public playerblackholestate playerblackhole { get; private set; }
 
+    public playerdeadstate playerdeadstate { get; private set; }
     #endregion
     protected override void Awake()
     {
@@ -65,12 +69,16 @@ public class player : entity
         playeraims = new playeraimswordstate(statemachine, this, "aimsword");
         Playercatchsword = new playercatchswordstate(statemachine, this, "catchsword");
         playerblackhole = new playerblackholestate(statemachine, this, "jump");
+        playerdeadstate = new playerdeadstate(statemachine, this, "dead");
     }
     protected override void Start()
     {
         base.Start();
         skill = skillmanager.instance;
         statemachine.initialize(playeridlestate);
+        defaultmovespeed = movespeed;
+        defaultjumpforce = jumpforce;
+        defaultdashspeed = dashspeed;
     }
      
     protected override void Update()
@@ -84,6 +92,27 @@ public class player : entity
         {
             skill.crystal.canuseskill();
         }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            storehouse.instance.useflask();
+        }
+    }
+
+    public override void slowentityby(float _slowpercentage, float slowduration)
+    {
+        movespeed = movespeed * (1 - _slowpercentage);
+        jumpforce = jumpforce * (1 - _slowpercentage);
+        dashspeed = dashspeed * (1 - _slowpercentage);
+        animator.speed = animator.speed * (1 - _slowpercentage);
+        Invoke("returndefaultspeed" , slowduration);
+    }
+    protected override void returndefaultspeed()
+    {
+        base.returndefaultspeed();
+        movespeed = defaultmovespeed;
+        jumpforce = defaultjumpforce;
+        dashspeed = defaultdashspeed;
+        //animator.speed = 1;
     }
     public void assignnewsword(GameObject _newsword)
     {
@@ -128,6 +157,12 @@ public class player : entity
     #endregion
 
     public void Animationtrigger() => statemachine.currentstate.AnimationFinishtrigger();
-    
-    
+
+
+    public override void Die()
+    {
+        base.Die();
+        statemachine.changestate(playerdeadstate);
+    }
+
 }

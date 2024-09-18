@@ -31,7 +31,7 @@ public class playerblackholestate : playerstate
     {
         base.exit();
         rb.gravityScale = defaultgravity;
-        player.maketransparent(false);
+        player.fx.maketransparent(false);
         isblackhole = false;
     }
 

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class entity : MonoBehaviour
 {
+
     [Header("knockback info")]
     [SerializeField] protected Vector2 knockbackdir;
     [SerializeField] private float knockbackduration;
@@ -17,15 +18,24 @@ public class entity : MonoBehaviour
     [SerializeField] protected Transform wallcheck;
     [SerializeField] protected float wallcheckdistance;
     [SerializeField] protected LayerMask whatisground;
+
+    
+
+
     #region ×é¼þ
     public Animator animator { get; private set; }
     public Rigidbody2D rb { get; private set; }
     public entityfx fx { get; private set; }
 
     public SpriteRenderer sr { get; private set; }
+    public characterstates states { get; private set; }
+    public CapsuleCollider2D cd {  get; private set; }
     #endregion
     public int facingdir { get; private set; } = 1;
     protected bool isright = true;
+
+    public System.Action onFlipped;
+
 
     
     protected virtual void Awake()
@@ -38,14 +48,24 @@ public class entity : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
         fx = GetComponent<entityfx>();
+        states = GetComponent<characterstates>();
+        cd = GetComponent<CapsuleCollider2D>();
     }
     protected virtual void Update()
     {
 
     }
-    public virtual void damage()
+    public virtual void slowentityby(float _slowpercentage , float slowduration)
     {
-        fx.StartCoroutine("flashfx");
+
+    }
+    protected virtual void returndefaultspeed()
+    {
+        animator.speed = 1;
+    }
+    public virtual void damageEffect()
+    {
+        
         StartCoroutine("hitknockback");
         //Debug.Log(gameObject.name);
     }
@@ -95,6 +115,8 @@ public class entity : MonoBehaviour
         facingdir = facingdir * -1;
         isright = !isright;
         transform.Rotate(0, 180, 0);
+        if(onFlipped != null)
+            onFlipped();
     }
 
     public virtual void Flipcontroller(float _x)
@@ -110,15 +132,10 @@ public class entity : MonoBehaviour
     }
     #endregion
 
-    public void maketransparent(bool _transparent)
+    
+
+    public virtual void Die()
     {
-        if (_transparent)
-        {
-            sr.color = Color.clear;
-        }
-        else
-        {
-            sr.color = Color.white;
-        }
+
     }
 }

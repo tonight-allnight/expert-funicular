@@ -23,6 +23,10 @@ public class enemy : entity
     public float attackcooldown;
     [HideInInspector] public float lasttimeattacked;
     public enemystatemachine statemachine { get; private set; }
+
+    private float deadtimer = 3;
+
+    public string lastanimboolname {  get; private set; }
     protected override void Awake()
     {
         base.Awake();
@@ -33,6 +37,17 @@ public class enemy : entity
     {
         base.Update();
         statemachine.currentstate.update();
+    }
+    public override void slowentityby(float _slowpercentage, float slowduration)
+    {
+        movespeed = movespeed * (1 - _slowpercentage);
+        animator.speed = animator.speed * (1 - _slowpercentage);
+        Invoke("returndefaultspeed",slowduration);
+    }
+    protected override void returndefaultspeed()
+    {
+        base.returndefaultspeed();
+        movespeed = defaultspeed;
     }
 
     public virtual void Freezetimer( bool _timefreeze)
@@ -49,7 +64,8 @@ public class enemy : entity
         }
     }
 
-    protected virtual IEnumerator Freezetimefor(float _seconds)
+    public virtual void freezetimefor(float _duration) => StartCoroutine(Freezetimecorroutine(_duration));
+    protected virtual IEnumerator Freezetimecorroutine(float _seconds)
     {
         Freezetimer(true);
         yield return new WaitForSeconds( _seconds );
@@ -77,6 +93,11 @@ public class enemy : entity
         return false;
     }
 
+    public virtual void assignlastanimname(string _animboolname)
+    {
+        lastanimboolname = _animboolname;
+    }
+
     public virtual void animationfinishtrigger() => statemachine.currentstate.animationfinishtrigger();
 
     public virtual RaycastHit2D isplayerdetected() => Physics2D.Raycast(wallcheck.position, Vector2.right * facingdir, 50, whatisplayer);
@@ -85,5 +106,9 @@ public class enemy : entity
         base.OnDrawGizmos();
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(transform.position, new Vector3(attackdistance * facingdir + transform.position.x, transform.position.y));
+    }
+    public override void Die()
+    {
+        base.Die();
     }
 }

@@ -17,10 +17,16 @@ public class skeltonanimationfinishtrigger : MonoBehaviour
         {
             if (hit.GetComponent<player>() != null)
             {
-                hit.GetComponent<player>().damage();
+                playerstats playerstats = hit.GetComponent<playerstats>();
+                enemy.states.DoDamage(playerstats);
             }
         }
     }
     private void opencounterwindow() => enemy.opencounterattackwindow();
     private void closecounterwindow() => enemy.closecounterattackwindow();
+    private void destroyenemy()
+    {
+        Debug.Log("ËÀÍö");
+        gameObject.SetActive(false);//ÉèÖÃ¶¯»­¼àÌıÖ¡£¬ËÀÍö²»ÏÔÊ¾
+    }
 }

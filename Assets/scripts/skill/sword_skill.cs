@@ -46,6 +46,7 @@ public class sword_skill : skill
 
     protected override void Update()
     {
+        base.Update();
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {
             finaldir = new Vector2(aimdirection().normalized.x * launchforce.x, aimdirection().normalized.y * launchforce.y);

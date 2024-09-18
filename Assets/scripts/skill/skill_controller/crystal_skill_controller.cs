@@ -6,6 +6,7 @@ using UnityEngine;
 public class crystal_skill_controller : MonoBehaviour
 {
     [SerializeField] private float colorlosingspeed;
+    private player player;
     private Animator anim => GetComponent<Animator>();
     private CircleCollider2D cd => GetComponent<CircleCollider2D>();
 
@@ -21,12 +22,15 @@ public class crystal_skill_controller : MonoBehaviour
     private float movespeed;
 
     private Transform closettarget;
+
+    [SerializeField] private LayerMask whatisenemy;
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
     }
-    public void setupcrystal(float _crystalduration , bool _canexplode, bool _canmove, float _movespeed , Transform _closettarget)
+    public void setupcrystal(float _crystalduration , bool _canexplode, bool _canmove, float _movespeed , Transform _closettarget ,player _player)
     {
+        player = _player;
         crystalexisttime = _crystalduration;
         canexplode = _canexplode;
         canmove = _canmove;
@@ -43,7 +47,7 @@ public class crystal_skill_controller : MonoBehaviour
         if (canmove && closettarget != null)
         {
             transform.position = Vector2.MoveTowards(transform.position, closettarget.position, movespeed * Time.deltaTime);
-            if(Vector2.Distance(transform.position , closettarget.position)< 2)
+            if(Vector2.Distance(transform.position , closettarget.position)< .5f)
             {
                 fininshexplode() ;
                 canmove = false ;
@@ -55,6 +59,14 @@ public class crystal_skill_controller : MonoBehaviour
         }
     }
 
+    public void chooserandomenemy()
+    {
+        float radius = skillmanager.instance.blackhole.getblackholeradius();
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, radius , whatisenemy);
+        if(colliders.Length > 0)
+            closettarget = colliders[Random.Range(0, colliders.Length)].transform;
+    }
+
     private void animationexplodeevent()
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, cd.radius);
@@ -63,7 +75,16 @@ public class crystal_skill_controller : MonoBehaviour
         {
             if (hit.GetComponent<enemy>() != null)
             {
-                hit.GetComponent<enemy>().damage();
+                player.states.DoMagicdamage(hit.GetComponent<characterstates>());
+                itemdata_equipment equipment = storehouse.instance.getequipment(Equipmentype.amulet);
+                if(equipment.itemtype != Itemtype.material)
+                {
+                    equipment.excuteitemeffect(hit.transform);
+                }
+                else
+                {
+                    return;
+                }
             }
         }
     }

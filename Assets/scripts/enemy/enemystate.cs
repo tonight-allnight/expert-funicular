@@ -27,7 +27,7 @@ public class enemystate
     public virtual void exit()
     {
         enemybase.animator.SetBool(animboolname, false);
-
+        enemybase.assignlastanimname(animboolname);
     }
     public virtual void update()
     {

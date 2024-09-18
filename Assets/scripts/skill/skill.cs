@@ -5,7 +5,7 @@ using UnityEngine;
 public class skill : MonoBehaviour
 {
     [SerializeField] protected float cooldown;
-    protected float cooldowntimer;
+    [SerializeField] protected float cooldowntimer;
     protected player player;
     protected virtual void Start()
     {
@@ -20,8 +20,8 @@ public class skill : MonoBehaviour
     {
         if(cooldowntimer < 0)
         {
-            Useskill();
             cooldowntimer = cooldown;
+            Useskill();
             return true;
         }
         return false;

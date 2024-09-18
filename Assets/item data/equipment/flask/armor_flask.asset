@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ed0fb78d298c9d40b3d2f65df2889a6, type: 3}
+  m_Name: armor_flask
+  m_EditorClassIdentifier: 
+  itemtype: 1
+  itemname: "\u88C5\u7532\u836F\u6C34"
+  icon: {fileID: -165920498, guid: a9ca9a41598dd2e44b125928045c518f, type: 3}
+  dropchance: 0
+  equipmentype: 3
+  itemeffects:
+  - {fileID: 11400000, guid: 0eff5adf936419c4c8133bcc60e84497, type: 2}
+  - {fileID: 11400000, guid: b2edf119df3187949b142d89318e6d0a, type: 2}
+  itemcooldown: 15
+  strength: 0
+  agility: 0
+  intelligence: 0
+  vitality: 0
+  damage: 0
+  critchance: 0
+  critpower: 0
+  maxHp: 0
+  armor: 0
+  evasion: 0
+  magicresistance: 0
+  firedamage: 0
+  icedamage: 0
+  lightingdamage: 0
+  craftingmaterials: []

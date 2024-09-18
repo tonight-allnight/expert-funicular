@@ -137,8 +137,8 @@ public class sword_skill_controller : MonoBehaviour
                     {
                         if (hit.GetComponent<enemy>() != null)
                         {
-                            hit.GetComponent<enemy>().StartCoroutine("Freezetimefor" , freezetimeduration);
-                            hit.GetComponent<enemy>().damage();
+                         
+                            swordskilldamage(hit.GetComponent<enemy>());
                         }
                     }
                 }
@@ -162,8 +162,8 @@ public class sword_skill_controller : MonoBehaviour
 
             if (Vector2.Distance(transform.position, enemytarget[targetindex].position) < .1f)
             {
-                enemytarget[targetindex].GetComponent<enemy>().damage();
-                enemytarget[targetindex].GetComponent<enemy>().StartCoroutine("Freezetimefor" , freezetimeduration);
+                
+                swordskilldamage(enemytarget[targetindex].GetComponent<enemy>());
                 targetindex++;
                 bounceamount--;
                 if (bounceamount < 0)
@@ -185,15 +185,33 @@ public class sword_skill_controller : MonoBehaviour
         {
             return;
         }
-
         if(collision.GetComponent<enemy>() != null)
         {
             enemy enemy = collision.GetComponent<enemy>();
-            enemy.damage();
-            enemy.StartCoroutine("Freezetimefor" , freezetimeduration);
+            swordskilldamage(enemy);
         }
         setuuptargetbounce(collision);
         stukinto(collision);
+    }
+
+    private void swordskilldamage(enemy enemy)
+    {
+        player.states.DoDamage(enemy.GetComponent<characterstates>());
+        enemy.freezetimefor(freezetimeduration);
+        if(storehouse.instance == null)
+        {
+            return;
+        }
+        itemdata_equipment equipment = storehouse.instance.getequipment(Equipmentype.amulet);
+        if (equipment.itemtype != Itemtype.material)
+        {
+            //Debug.Log(equipment.itemtype);
+            equipment.excuteitemeffect(enemy.transform);
+        }
+        else
+        {
+            return;
+        }
     }
 
     private void setuuptargetbounce(Collider2D collision)

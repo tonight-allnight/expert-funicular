@@ -13,7 +13,10 @@ public class enemy_skelton : enemy
     public skeltonattackstate attackstate { get; private set; }
 
     public skeltonstunnedstate stunnedstate { get; private set; }
+    public skeltondeadstate deadstate { get; private set; }
     #endregion 
+
+    private float deadtimer;
     protected override void Awake()
     {
         base.Awake();
@@ -22,6 +25,7 @@ public class enemy_skelton : enemy
         battlestate = new skeltonbattlestate(statemachine , this , "move" , this);
         attackstate = new skeltonattackstate(statemachine ,this, "attack" , this);
         stunnedstate = new skeltonstunnedstate(statemachine, this, "stunned", this);
+        deadstate = new skeltondeadstate(statemachine, this, "dead", this);
     }
 
     protected override void Start()
@@ -33,7 +37,7 @@ public class enemy_skelton : enemy
     protected override void Update()
     {
         base.Update();
-        
+        deadtimer -= Time.deltaTime;
     }
     public override bool Canbestunned()
     {
@@ -43,5 +47,11 @@ public class enemy_skelton : enemy
             return true;
         }
         return false;
+    }
+
+    public override void Die()
+    {
+        statemachine.changestate(deadstate);
+        base.Die();
     }
 }

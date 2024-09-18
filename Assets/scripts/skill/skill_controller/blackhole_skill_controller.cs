@@ -39,6 +39,8 @@ public class blackhole_skill_controller : MonoBehaviour
         amountofattack  = _amountofattack;
         clonecooldown = _clonecooldown;
         blackholeduration = _blackholeduartion;
+        if (skillmanager.instance.clone.crystalinsteaedofclone)
+            playercandisappear = false;
     }
 
     private void Start()
@@ -99,7 +101,7 @@ public class blackhole_skill_controller : MonoBehaviour
         if (playercandisappear)
         {
             playercandisappear = false;
-            playermanager.instance.player.maketransparent(true);
+            playermanager.instance.player.fx.maketransparent(true);
         }
     }
 
@@ -122,7 +124,17 @@ public class blackhole_skill_controller : MonoBehaviour
                 xoffset = 2;
             }
 
-            skillmanager.instance.clone.createclone(target[randomindex], facing, new Vector3(xoffset, 0));
+            if (skillmanager.instance.clone.crystalinsteaedofclone)
+            {
+                skillmanager.instance.crystal.createclonecrystal();
+                skillmanager.instance.crystal.currentcrystalchooserandomtarget();
+            }
+            else
+            {
+                skillmanager.instance.clone.createclone(target[randomindex], facing, new Vector3(xoffset, 0));
+
+            }
+
             amountofattack--;
 
             if (amountofattack <= 0)
